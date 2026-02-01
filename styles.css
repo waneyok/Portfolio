@@ -958,6 +958,108 @@ section {
     font-weight: 600;
 }
 
+/* Отзывы */
+.reviews {
+    background: linear-gradient(135deg, var(--light-pink), var(--light-purple));
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr));
+    gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.review-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px var(--shadow);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+    position: relative;
+    overflow: hidden;
+}
+
+.review-card::before {
+    content: '"';
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 6rem;
+    font-family: Georgia, serif;
+    color: var(--light-pink);
+    opacity: 0.5;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.review-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 50px var(--shadow-hover);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.review-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-pink), var(--primary-blue));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px var(--shadow);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.review-card:hover .review-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.review-author h4 {
+    font-size: 1.2rem;
+    color: var(--text-dark);
+    margin-bottom: 0.3rem;
+    font-weight: 700;
+}
+
+.review-date {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    background: linear-gradient(135deg, var(--light-pink), var(--light-blue));
+    padding: 0.2rem 0.8rem;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.review-content {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+}
+
+.review-content p {
+    color: var(--text-light);
+    line-height: 1.8;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.review-stars {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+}
+
 /* Контакты */
 .contact {
     background: linear-gradient(135deg, var(--light-green), var(--light-yellow));
@@ -1429,6 +1531,34 @@ section {
         grid-template-columns: 1fr;
     }
 
+    .reviews-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .review-card {
+        padding: 1.5rem;
+    }
+
+    .review-card::before {
+        font-size: 4rem;
+        top: 5px;
+        right: 10px;
+    }
+
+    .review-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+    }
+
+    .review-author h4 {
+        font-size: 1.1rem;
+    }
+
+    .review-content p {
+        font-size: 0.95rem;
+    }
+
     .hero-photo {
         max-height: 400px;
         object-fit: cover;
@@ -1498,6 +1628,41 @@ section {
 
     .social-card-content h4 {
         font-size: 1.2rem;
+    }
+
+    .review-card {
+        padding: 1.2rem;
+    }
+
+    .review-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.8rem;
+    }
+
+    .review-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.8rem;
+    }
+
+    .review-author h4 {
+        font-size: 1rem;
+    }
+
+    .review-content p {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .review-stars {
+        text-align: center;
+    }
+
+    .review-card::before {
+        font-size: 3rem;
+        top: 0;
+        right: 5px;
     }
 
     .timeline-icon {
