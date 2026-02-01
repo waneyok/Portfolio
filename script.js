@@ -287,4 +287,117 @@ if ('IntersectionObserver' in window) {
     });
 }
 
+// ===== ЗАГРУЗКА ОТЗЫВОВ ИЗ GOOGLE SHEETS =====
+
+// ВАЖНО: Замените на ID вашей Google Таблицы
+// Ссылка на таблицу: https://docs.google.com/spreadsheets/d/ВАШ_ID_ТАБЛИЦЫ/edit
+const SHEET_ID = '1s0dTA30qsS6hpB7T_jv65D07MQ3VT2VYjs73pboLsuk';
+const SHEET_NAME = 'Sheet1'; // Имя листа (обычно "Sheet1" или "Лист1")
+
+// Иконки для отзывов (выбираются случайно)
+// const reviewIcons = ['👨‍👩‍👧‍👦', '👩', '👨', '👥', '👨‍👩‍👧', '👩‍👧', '👨‍👧', '💬'];
+const reviewIcons = '💬';
+
+// Получаем контейнер для отзывов
+const reviewsGrid = document.getElementById('reviewsGrid');
+
+// Функция для создания карточки отзыва
+function createReviewCard(name, text) {
+    const icon = reviewIcons[Math.floor(Math.random() * reviewIcons.length)];
+    
+    return `
+        <div class="review-card">
+            <div class="review-header">
+                <div class="review-icon">${icon}</div>
+                <div class="review-author">
+                    <h4>${escapeHtml(name) || 'Аноним'}</h4>
+                </div>
+            </div>
+            <div class="review-content">
+                <p>${escapeHtml(text)}</p>
+            </div>
+            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+        </div>
+    `;
+}
+
+// Функция для экранирования HTML (защита от XSS)
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Функция загрузки отзывов из Google Sheets
+async function loadReviews() {
+    if (!reviewsGrid) return;
+    
+    try {
+        // URL для получения данных в формате JSON
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+        
+        const response = await fetch(url);
+        const text = await response.text();
+        
+        // Парсим ответ (Google возвращает JSONP)
+        const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?/);
+        if (!jsonString || !jsonString[1]) {
+            throw new Error('Не удалось получить данные');
+        }
+        
+        const data = JSON.parse(jsonString[1]);
+        const rows = data.table.rows;
+        
+        if (rows.length === 0) {
+            reviewsGrid.innerHTML = `
+                <div class="no-reviews">
+                    <p>🌟 Пока нет отзывов. Будьте первым!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Генерируем HTML для всех отзывов (пропускаем заголовок если есть)
+        let reviewsHTML = '';
+        
+        // Определяем индексы столбцов (предполагаем: 0 - timestamp, 1 - имя, 2 - отзыв)
+        rows.forEach((row, index) => {
+            if (row.c && row.c.length >= 2) {
+                const name = row.c[1] ? row.c[1].v : 'Аноним';
+                const text = row.c[2] ? row.c[2].v : '';
+                
+                if (text && text.trim()) {
+                    reviewsHTML += createReviewCard(name, text);
+                }
+            }
+        });
+        
+        if (reviewsHTML) {
+            reviewsGrid.innerHTML = reviewsHTML;
+        } else {
+            reviewsGrid.innerHTML = `
+                <div class="no-reviews">
+                    <p>🌟 Пока нет отзывов. Будьте первым!</p>
+                </div>
+            `;
+        }
+        
+        console.log(`✅ Загружено отзывов: ${rows.length}`);
+        
+    } catch (error) {
+        console.error('Ошибка загрузки отзывов:', error);
+        reviewsGrid.innerHTML = `
+            <div class="reviews-error">
+                <p>😔 Не удалось загрузить отзывы. Попробуйте позже.</p>
+            </div>
+        `;
+    }
+}
+
+// Загружаем отзывы при загрузке страницы
+if (reviewsGrid) {
+    loadReviews();
+}
+
 console.log('🌼 Сайт-портфолио загружен успешно!');
