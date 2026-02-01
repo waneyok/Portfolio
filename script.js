@@ -400,4 +400,172 @@ if (reviewsGrid) {
     loadReviews();
 }
 
+// ===== ГАЛЕРЕЯ — список из assets/group/images.json, обновляется при открытии модалки =====
+const GALLERY_JSON_URL = 'assets/group/images.json';
+const GALLERY_BASE = 'assets/group/';
+
+let galleryPhotosList = []; // полные пути к фото (обновляется при каждом запросе)
+
+const galleryGrid = document.getElementById('galleryGrid');
+const galleryModal = document.getElementById('galleryModal');
+const galleryModalClose = document.getElementById('galleryModalClose');
+const galleryModalImg = document.getElementById('galleryModalImg');
+const galleryModalPrev = document.getElementById('galleryModalPrev');
+const galleryModalNext = document.getElementById('galleryModalNext');
+const galleryModalThumbs = document.getElementById('galleryModalThumbs');
+
+let currentGalleryIndex = 0;
+
+// Загрузить список фото из JSON (с cache-bust, чтобы всегда брать актуальный список)
+function fetchGalleryList() {
+    const url = GALLERY_JSON_URL + '?t=' + Date.now();
+    return fetch(url)
+        .then(res => res.ok ? res.json() : Promise.reject(new Error('Не удалось загрузить список')))
+        .then(filenames => {
+            if (!Array.isArray(filenames)) return [];
+            return filenames
+                .filter(f => typeof f === 'string' && /\.(jpg|jpeg|png|webp|gif)$/i.test(f))
+                .map(f => GALLERY_BASE + f);
+        });
+}
+
+// Построить сетку: первые 6 фото + кнопка «Смотреть все»
+function buildGalleryGrid(photos) {
+    if (!galleryGrid) return;
+    galleryPhotosList = photos;
+    galleryGrid.innerHTML = '';
+
+    if (photos.length === 0) {
+        galleryGrid.innerHTML = '<div class="gallery-empty"><p>Пока нет фотографий</p></div>';
+        return;
+    }
+
+    const showCount = Math.min(6, photos.length);
+    for (let i = 0; i < showCount; i++) {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        const img = document.createElement('img');
+        img.src = photos[i];
+        img.alt = 'Моменты из жизни группы';
+        img.className = 'gallery-photo';
+        img.loading = 'lazy';
+        item.appendChild(img);
+        item.addEventListener('click', () => openGalleryModal(i));
+        galleryGrid.appendChild(item);
+    }
+
+    const moreCount = photos.length - showCount;
+    if (moreCount > 0) {
+        const more = document.createElement('div');
+        more.className = 'gallery-item gallery-more';
+        more.id = 'galleryMore';
+        more.setAttribute('role', 'button');
+        more.setAttribute('tabindex', '0');
+        more.innerHTML = `
+            <div class="gallery-more-content">
+                <span class="gallery-more-icon">📷</span>
+                <span class="gallery-more-text">Смотреть все фото</span>
+                <span class="gallery-more-count">+${moreCount}</span>
+            </div>
+        `;
+        more.addEventListener('click', () => openGalleryModal(0));
+        more.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openGalleryModal(0);
+            }
+        });
+        galleryGrid.appendChild(more);
+    }
+}
+
+function openGalleryModal(index = 0) {
+    // Каждый раз при открытии модалки заново загружаем список — новые фото появятся сразу
+    fetchGalleryList().then(photos => {
+        if (photos.length === 0) return;
+        galleryPhotosList = photos;
+        currentGalleryIndex = Math.min(index, photos.length - 1);
+        if (galleryModal && galleryModalImg) {
+            galleryModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            showGalleryPhoto(currentGalleryIndex);
+            buildGalleryThumbs();
+        }
+    }).catch(() => {
+        // Если запрос упал, используем уже загруженный список
+        if (galleryPhotosList.length > 0) {
+            currentGalleryIndex = Math.min(index, galleryPhotosList.length - 1);
+            galleryModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            showGalleryPhoto(currentGalleryIndex);
+            buildGalleryThumbs();
+        }
+    });
+}
+
+function closeGalleryModal() {
+    if (galleryModal) {
+        galleryModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function showGalleryPhoto(index) {
+    if (!galleryModalImg || index < 0 || index >= galleryPhotosList.length) return;
+    currentGalleryIndex = index;
+    galleryModalImg.src = galleryPhotosList[index];
+    galleryModalImg.alt = 'Фото ' + (index + 1);
+    const thumbs = galleryModalThumbs.querySelectorAll('img');
+    thumbs.forEach((thumb, i) => thumb.classList.toggle('active', i === index));
+}
+
+function buildGalleryThumbs() {
+    if (!galleryModalThumbs) return;
+    galleryModalThumbs.innerHTML = '';
+    galleryPhotosList.forEach((src, i) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = 'Фото ' + (i + 1);
+        img.classList.toggle('active', i === currentGalleryIndex);
+        img.addEventListener('click', () => showGalleryPhoto(i));
+        galleryModalThumbs.appendChild(img);
+    });
+}
+
+function galleryPrev() {
+    const next = currentGalleryIndex - 1;
+    showGalleryPhoto(next < 0 ? galleryPhotosList.length - 1 : next);
+}
+
+function galleryNext() {
+    const next = currentGalleryIndex + 1;
+    showGalleryPhoto(next >= galleryPhotosList.length ? 0 : next);
+}
+
+if (galleryModalClose) galleryModalClose.addEventListener('click', closeGalleryModal);
+if (galleryModalPrev) galleryModalPrev.addEventListener('click', galleryPrev);
+if (galleryModalNext) galleryModalNext.addEventListener('click', galleryNext);
+
+if (galleryModal) {
+    galleryModal.addEventListener('click', (e) => {
+        if (e.target === galleryModal) closeGalleryModal();
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (!galleryModal || !galleryModal.classList.contains('active')) return;
+    if (e.key === 'Escape') closeGalleryModal();
+    if (e.key === 'ArrowLeft') galleryPrev();
+    if (e.key === 'ArrowRight') galleryNext();
+});
+
+// Первая загрузка галереи при открытии страницы
+if (galleryGrid) {
+    fetchGalleryList()
+        .then(photos => buildGalleryGrid(photos))
+        .catch(() => {
+            galleryGrid.innerHTML = '<div class="gallery-empty"><p>Не удалось загрузить галерею</p></div>';
+        });
+}
+
 console.log('🌼 Сайт-портфолио загружен успешно!');

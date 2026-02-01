@@ -300,46 +300,25 @@
           <h2 class="section-title">Галерея</h2>
           <div class="title-underline"></div>
         </div>
-        <div class="gallery-grid">
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>📸</span>
-              <p>Моменты из жизни группы</p>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>🎨</span>
-              <p>Творческие работы детей</p>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>🎉</span>
-              <p>Праздники и мероприятия</p>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>🌳</span>
-              <p>Прогулки на свежем воздухе</p>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>📖</span>
-              <p>Занятия и обучение</p>
-            </div>
-          </div>
-          <div class="gallery-item">
-            <div class="gallery-placeholder">
-              <span>🏆</span>
-              <p>Достижения и награды</p>
-            </div>
+        <div class="gallery-grid" id="galleryGrid">
+          <div class="gallery-loading">
+            <div class="loading-spinner"></div>
+            <p>Загрузка галереи...</p>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- Модальное окно галереи -->
+    <div class="gallery-modal" id="galleryModal">
+      <button class="gallery-modal-close" id="galleryModalClose" aria-label="Закрыть">&times;</button>
+      <button class="gallery-modal-prev" id="galleryModalPrev" aria-label="Назад">‹</button>
+      <button class="gallery-modal-next" id="galleryModalNext" aria-label="Вперёд">›</button>
+      <div class="gallery-modal-content">
+        <img src="" alt="Фото галереи" id="galleryModalImg">
+      </div>
+      <div class="gallery-modal-thumbs" id="galleryModalThumbs"></div>
+    </div>
 
     <!-- Достижения -->
     <section id="achievements" class="achievements">
@@ -419,7 +398,7 @@
               <div class="contact-icon">📧</div>
               <div class="contact-details">
                 <h3>Email</h3>
-                <p>vospitatel@example.com</p>
+                <p type="email">romashka.97leska@yandex.ru</p>
               </div>
             </div>
             <div class="contact-item">
