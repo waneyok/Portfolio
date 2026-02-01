@@ -1232,7 +1232,7 @@ section {
         background: var(--white);
         width: 100vw;
         max-width: 100vw;
-        padding: 0.8rem 1rem;
+        padding: 0.5rem 0.8rem;
         box-shadow: 0 10px 30px var(--shadow);
         transition: left 0.3s ease;
         z-index: 999;
@@ -1241,6 +1241,7 @@ section {
         overflow-y: auto;
         max-height: calc(100vh - 70px);
         list-style: none;
+        gap: 0;
     }
 
     .nav-menu.active {
@@ -1252,16 +1253,19 @@ section {
         margin: 0;
         padding: 0;
         list-style: none;
+        line-height: 1.2;
     }
 
     .nav-link {
         display: block;
         width: 100%;
-        padding: 0.7rem 0.5rem;
+        padding: 0.5rem 0.5rem;
         text-align: left;
         border-bottom: 1px solid var(--light-pink);
+        line-height: 1.4;
         font-size: 0.95rem;
         white-space: normal;
+        margin: 0;
     }
 
     .nav-link:last-child {
