@@ -383,14 +383,13 @@ body {
 }
 
 .title-line.highlight {
-    background: linear-gradient(135deg, var(--primary-pink), var(--primary-blue), var(--primary-yellow));
+    background: linear-gradient(135deg, var(--dark-pink), var(--dark-blue), var(--dark-yellow));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 900;
-    text-shadow: 0 2px 8px rgba(255, 182, 217, 0.3);
     letter-spacing: 0.02em;
-    filter: drop-shadow(0 2px 4px rgba(182, 229, 255, 0.2));
+    filter: drop-shadow(0 3px 6px rgba(255, 140, 200, 0.5)) drop-shadow(0 1px 2px rgba(140, 200, 255, 0.4));
 }
 
 .hero-subtitle {
