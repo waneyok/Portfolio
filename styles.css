@@ -1533,30 +1533,43 @@ section {
 
     .reviews-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .review-card {
-        padding: 1.5rem;
+        padding: 1.8rem;
+    }
+
+    .review-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
     }
 
     .review-card::before {
-        font-size: 4rem;
-        top: 5px;
-        right: 10px;
+        font-size: 5rem;
+        top: 8px;
+        right: 15px;
     }
 
     .review-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 2rem;
+        width: 55px;
+        height: 55px;
+        font-size: 2.2rem;
+        flex-shrink: 0;
     }
 
     .review-author h4 {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
     }
 
     .review-content p {
-        font-size: 0.95rem;
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .review-stars {
+        font-size: 1.1rem;
     }
 
     .hero-photo {
@@ -1631,38 +1644,39 @@ section {
     }
 
     .review-card {
-        padding: 1.2rem;
+        padding: 1.5rem;
     }
 
     .review-header {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.8rem;
+        flex-direction: row;
+        text-align: left;
+        gap: 1rem;
     }
 
     .review-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 1.8rem;
+        width: 50px;
+        height: 50px;
+        font-size: 2rem;
+        flex-shrink: 0;
     }
 
     .review-author h4 {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .review-content p {
-        font-size: 0.9rem;
-        text-align: center;
+        font-size: 0.95rem;
+        text-align: left;
     }
 
     .review-stars {
-        text-align: center;
+        text-align: left;
     }
 
     .review-card::before {
-        font-size: 3rem;
-        top: 0;
-        right: 5px;
+        font-size: 4rem;
+        top: 5px;
+        right: 10px;
     }
 
     .timeline-icon {
