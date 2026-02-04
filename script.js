@@ -568,4 +568,25 @@ if (galleryGrid) {
         });
 }
 
+// ===== СКАЧИВАНИЕ ФАЙЛОВ НА info.html =====
+// Делает кнопки «Скачать» гарантированно кликабельными и запускает загрузку через JS.
+document.querySelectorAll('.info-card .btn-small').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+        const href = btn.getAttribute('href');
+        if (!href) return;
+
+        // Если браузер сам нормально обрабатывает download, не мешаем
+        // (но на некоторых системах/протоколах это не срабатывает)
+        e.preventDefault();
+
+        const link = document.createElement('a');
+        link.href = href;
+        const filename = href.split('/').pop();
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+});
+
 console.log('🌼 Сайт-портфолио загружен успешно!');
